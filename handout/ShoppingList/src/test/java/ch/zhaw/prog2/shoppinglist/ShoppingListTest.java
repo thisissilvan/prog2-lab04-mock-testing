@@ -20,7 +20,7 @@ class ShoppingListTest {
     PriceService priceService;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         shoppingList = new ShoppingList();
         priceService = mock(PriceService.class);
         when(priceService.getPrice(milk)).thenReturn(2.15);
@@ -44,8 +44,10 @@ class ShoppingListTest {
     @Test
     void testAddProduct() {
         addMilkAndSaladToShoppingList();
+
         assertNotNull(shoppingList);
         assertEquals(2, shoppingList.getProducts().size());
+        assertEquals(5, milk.getQuantity() + salad.getQuantity());
     }
 
     @Test
