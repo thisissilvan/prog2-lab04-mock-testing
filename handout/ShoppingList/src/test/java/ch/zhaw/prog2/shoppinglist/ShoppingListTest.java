@@ -16,6 +16,14 @@ class ShoppingListTest {
     private final Product milk = new Product("MilkId", "Milk", 3);
     private final Product salad = new Product("SaladId", "Salad", 2);
 
+    private final double milkPrice = 2.15;
+    private final int milkQuantity = 3;
+    private final String milkString = "Milk";
+
+    private final double saladPrice = 2.40;
+    private final int saladQuantity = 2;
+    private final String saladString = "Salad";
+
     @Mock
     PriceService priceService;
 
@@ -23,6 +31,7 @@ class ShoppingListTest {
     void setUp() {
         shoppingList = new ShoppingList();
         priceService = mock(PriceService.class);
+        shoppingList.setPriceService(priceService);
         when(priceService.getPrice(milk)).thenReturn(2.15);
         when(priceService.getPrice(salad)).thenReturn(2.40);
     }
@@ -30,36 +39,44 @@ class ShoppingListTest {
     @Test
     void testGetProducts() {
         List<Product> expectedList = new ArrayList<>();
+        List<Product> actualList = shoppingList.getProducts();
         expectedList.add(milk);
         expectedList.add(salad);
-        assertNotNull(expectedList);
-        assertEquals(2, expectedList.size());
-
         addMilkAndSaladToShoppingList();
-        assertNotNull(shoppingList);
 
-        assertEquals(expectedList, shoppingList.getProducts());
+        assertNotNull(expectedList);
+        assertNotNull(shoppingList);
+        assertEquals(expectedList, actualList);
+    }
+
+    @Test
+    void testGetProductString() {
+        addMilkAndSaladToShoppingList();
+        String actualMilkString = shoppingList.getProducts().get(0).getName();
+        String actualSaladString = shoppingList.getProducts().get(1).getName();
+
+        assertEquals(milkString, actualMilkString);
+        assertEquals(saladString, actualSaladString);
     }
 
     @Test
     void testAddProduct() {
         addMilkAndSaladToShoppingList();
+        int actualProductsOnList = shoppingList.getProducts().size();
+        int actualProductQuantityOnList = milk.getQuantity() + salad.getQuantity();
 
         assertNotNull(shoppingList);
-        assertEquals(2, shoppingList.getProducts().size());
-        assertEquals(5, milk.getQuantity() + salad.getQuantity());
+        assertEquals(2,actualProductsOnList);
+        assertEquals(5,actualProductQuantityOnList);
     }
 
     @Test
     void testGetTotalCosts() {
         addMilkAndSaladToShoppingList();
-        double expectedCosts = priceService.getPrice(milk) * 3;
-        expectedCosts += priceService.getPrice(salad) * 2;
+        double expectedCosts = (milkPrice * milkQuantity) + (saladPrice * saladQuantity);
+        double actualCosts = shoppingList.getTotalCosts();
 
-        shoppingList.setPriceService(priceService);
-
-        assertEquals(expectedCosts, shoppingList.getTotalCosts());
-
+        assertEquals(expectedCosts, actualCosts);
     }
 
     private void addMilkAndSaladToShoppingList() {
