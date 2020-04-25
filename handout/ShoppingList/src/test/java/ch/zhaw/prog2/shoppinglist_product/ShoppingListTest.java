@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -17,13 +16,15 @@ import static org.mockito.Mockito.when;
 class ShoppingListTest {
     private ShoppingList shoppingList;
 
-    private final double milkPrice = 2.15;
-    private final int milkQuantity = 3;
-    private final double saladPrice = 2.40;
-    private final int saladQuantity = 2;
+    private static final double MILK_PRICE = 2.15;
+    private static final int MILK_QUANTITY = 3;
+    private static final double SALAD_PRICE = 2.40;
+    private static final int SALAD_QUANTITY = 2;
 
     @Mock
     ProductMigros milk;
+
+    @Mock
     ProductMigros salad;
 
     @BeforeEach
@@ -31,19 +32,17 @@ class ShoppingListTest {
         shoppingList = new ShoppingList();
         MockitoAnnotations.initMocks(this);
 
-        milk = mock(ProductMigros.class);
-        when(milk.getQuantity()).thenReturn(3);
-        when(milk.getPrice()).thenReturn(2.15);
+        when(milk.getQuantity()).thenReturn(MILK_QUANTITY);
+        when(milk.getPrice()).thenReturn(MILK_PRICE);
 
-        salad = mock(ProductMigros.class);
-        when(salad.getQuantity()).thenReturn(2);
-        when(salad.getPrice()).thenReturn(2.40);
+        when(salad.getQuantity()).thenReturn(SALAD_QUANTITY);
+        when(salad.getPrice()).thenReturn(SALAD_PRICE);
     }
 
     @Test
     void testGetTotalCostsWithProductMock() {
         addMilkAndSaladToShoppingList();
-        double expectedCosts = (milkPrice * milkQuantity) + (saladPrice * saladQuantity);
+        double expectedCosts = (MILK_PRICE * MILK_QUANTITY) + (SALAD_PRICE * SALAD_QUANTITY);
         double actualCosts = shoppingList.getTotalCosts();
 
         assertEquals(expectedCosts, actualCosts);

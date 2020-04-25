@@ -3,12 +3,12 @@ package ch.zhaw.prog2.shoppinglist;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class ShoppingListTest {
@@ -16,13 +16,13 @@ class ShoppingListTest {
     private final Product milk = new Product("MilkId", "Milk", 3);
     private final Product salad = new Product("SaladId", "Salad", 2);
 
-    private final double milkPrice = 2.15;
-    private final int milkQuantity = 3;
-    private final String milkString = "Milk";
+    private static final double MILK_PRICE = 2.15;
+    private static final int MILK_QUANTITY = 3;
+    private static final String MILK_STRING = "Milk";
 
-    private final double saladPrice = 2.40;
-    private final int saladQuantity = 2;
-    private final String saladString = "Salad";
+    private static final double SALAD_PRICE = 2.40;
+    private static final int SALAD_QUANTITY = 2;
+    private static final String SALAD_STRING = "Salad";
 
     @Mock
     PriceService priceService;
@@ -30,10 +30,10 @@ class ShoppingListTest {
     @BeforeEach
     void setUp() {
         shoppingList = new ShoppingList();
-        priceService = mock(PriceService.class);
+        MockitoAnnotations.initMocks(this);
         shoppingList.setPriceService(priceService);
-        when(priceService.getPrice(milk)).thenReturn(2.15);
-        when(priceService.getPrice(salad)).thenReturn(2.40);
+        when(priceService.getPrice(milk)).thenReturn(MILK_PRICE);
+        when(priceService.getPrice(salad)).thenReturn(SALAD_PRICE);
     }
 
     @Test
@@ -55,8 +55,8 @@ class ShoppingListTest {
         String actualMilkString = shoppingList.getProducts().get(0).getName();
         String actualSaladString = shoppingList.getProducts().get(1).getName();
 
-        assertEquals(milkString, actualMilkString);
-        assertEquals(saladString, actualSaladString);
+        assertEquals(MILK_STRING, actualMilkString);
+        assertEquals(SALAD_STRING, actualSaladString);
     }
 
     @Test
@@ -73,7 +73,7 @@ class ShoppingListTest {
     @Test
     void testGetTotalCosts() {
         addMilkAndSaladToShoppingList();
-        double expectedCosts = (milkPrice * milkQuantity) + (saladPrice * saladQuantity);
+        double expectedCosts = (MILK_PRICE * MILK_QUANTITY) + (SALAD_PRICE * SALAD_QUANTITY);
         double actualCosts = shoppingList.getTotalCosts();
 
         assertEquals(expectedCosts, actualCosts);
